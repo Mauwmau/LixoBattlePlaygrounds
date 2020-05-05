@@ -6,6 +6,50 @@
     <title>Lixo Battle Playgrounds</title>
 </head>
 <body>
-    
+    <div id="root"></div>
+    <script>
+
+      const testDiv = document.createElement('DIV');
+      testDiv.style.backgroundColor = 'red';
+      testDiv.style.width = '100px';
+      testDiv.style.height = '100px';
+
+      const testDiv2 = document.createElement('DIV');
+      testDiv2.style.backgroundColor = 'blue';
+      testDiv2.style.width = '200px';
+      testDiv2.style.height = '200px';
+
+        // Render
+        const root = document.getElementById("root");
+        let renderable = {};
+        renderable.component = '';
+        renderable.reset = function() {
+          if(root.childElementCount){
+            root.removeChild(renderable.component);
+          }
+        }
+        renderable.setComponent = function(component) {
+          if(component !== renderable.component){
+            console.log('[LIXO]\tComponent was not clear, forcing reset');
+            renderable.reset();
+          }
+            renderable.component = component;
+        }
+        renderable.render = function() {
+          if (!renderable.component) {
+            console.log("[LIXO]\tnothing to render my dude");
+            return;
+          }
+            root.appendChild(renderable.component);
+        }
+
+        let mySwitch = testDiv;
+
+        const myTime = setInterval( () => {
+          renderable.setComponent(mySwitch);
+          renderable.render()
+        }, 250)
+
+    </script>
 </body>
 </html>
