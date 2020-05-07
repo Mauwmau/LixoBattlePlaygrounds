@@ -3,21 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./global.css">
     <title>Lixo Battle Playgrounds</title>
 </head>
 <body>
     <div id="root"></div>
-    <script>
+    <script type="module">
 
-      const testDiv = document.createElement('DIV');
-      testDiv.style.backgroundColor = 'red';
-      testDiv.style.width = '100px';
-      testDiv.style.height = '100px';
-
-      const testDiv2 = document.createElement('DIV');
-      testDiv2.style.backgroundColor = 'blue';
-      testDiv2.style.width = '200px';
-      testDiv2.style.height = '200px';
+      import initialScreen from "./Screens/Initial/initial.js";
+      import selectionScreen from "./Screens/Selection/selection.js";
+      import mapScreen from "./Screens/Map/map.js";
+      import battleScreen from "./Screens/Battle/battle.js";
 
         // Render
         const root = document.getElementById("root");
@@ -43,12 +39,19 @@
             root.appendChild(renderable.component);
         }
 
-        let mySwitch = testDiv;
+        let screenArray = [];
+        screenArray.push(initialScreen, selectionScreen, mapScreen, battleScreen);
+        let index = 0;
 
-        const myTime = setInterval( () => {
-          renderable.setComponent(mySwitch);
-          renderable.render()
-        }, 250)
+        let myInterval = setInterval(() => {
+          if (index < 4){
+            renderable.setComponent(screenArray[index % 4]);
+            renderable.render() 
+            index++;
+          } else {
+            clearInterval(myInterval);
+          }
+        }, 1000);
 
     </script>
 </body>
