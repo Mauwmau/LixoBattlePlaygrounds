@@ -10,48 +10,22 @@
     <div id="root"></div>
     <script type="module">
 
-      import initialScreen from "./Screens/Initial/initial.js";
+      import buildInitialScreen from "./Screens/Initial/initial.js";
       import selectionScreen from "./Screens/Selection/selection.js";
       import mapScreen from "./Screens/Map/map.js";
       import battleScreen from "./Screens/Battle/battle.js";
+      import renderable from './Services/render.js';
 
-        // Render
-        const root = document.getElementById("root");
-        let renderable = {};
-        renderable.component = '';
-        renderable.reset = function() {
-          if(root.childElementCount){
-            root.removeChild(renderable.component);
-          }
-        }
-        renderable.setComponent = function(component) {
-          if(component !== renderable.component){
-            console.log('[LIXO]\tComponent was not clear, forcing reset');
-            renderable.reset();
-          }
-            renderable.component = component;
-        }
-        renderable.render = function() {
-          if (!renderable.component) {
-            console.log("[LIXO]\tnothing to render my dude");
-            return;
-          }
-            root.appendChild(renderable.component);
-        }
+      //  Runtime only
 
-        let screenArray = [];
-        screenArray.push(initialScreen, selectionScreen, mapScreen, battleScreen);
-        let index = 0;
+      const initialScreen = buildInitialScreen(
+        () => {renderable.renderScreen(selectionScreen)}
+      );
 
-        let myInterval = setInterval(() => {
-          if (index < 4){
-            renderable.setComponent(screenArray[index % 4]);
-            renderable.render() 
-            index++;
-          } else {
-            clearInterval(myInterval);
-          }
-        }, 1000);
+      renderable.renderScreen(initialScreen);
+
+      // let screenArray = [];
+      // screenArray.push(initialScreen, selectionScreen, mapScreen, battleScreen);
 
     </script>
 </body>
