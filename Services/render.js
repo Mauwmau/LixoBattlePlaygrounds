@@ -1,35 +1,46 @@
-// Render
-const root = document.getElementById("root");
+const root = document.getElementById('root');
 
-const renderable = {};
+const LixoRenderEngine = {
 
-renderable.component = '';
+  component: '',
 
-renderable.reset = function() {
-  if(root.childElementCount){
-    root.removeChild(renderable.component);
+  isComponent(){    
+    return (typeof this.component).toString() === "object" ? true : false;
+  },
+
+  reset(){
+    if( root.childElementCount ){
+      root.removeChild(this.component);
+    } else {
+      console.log('Nothing to reset my dude');
+    }
+  },
+
+  render(){ 
+    if ( !this.isComponent() ){
+      console.log('Nothing to render my dude');
+    } else {
+      root.appendChild(this.component);
+    }
+  },
+
+  setComponent( component ){
+    if( !this.isComponent() ){
+      console.log('First time rendering');
+      this.component = component;
+    } else if ( this.component !== component ){
+      this.reset();
+      this.component = component;
+    } else {
+      console.log('Components are the same !!')
+    }
+  },
+
+  renderScreen( screen ){
+    this.setComponent(screen);
+    this.render();
   }
-}
 
-renderable.setComponent = function(component) {
-  if(component !== renderable.component){
-    console.log('[LIXO]\tComponent was not clear, forcing reset');
-    renderable.reset();
-  }
-    renderable.component = component;
-}
+};
 
-renderable.render = function() {
-  if (!renderable.component) {
-    console.log("[LIXO]\tnothing to render my dude");
-    return;
-  }
-    root.appendChild(renderable.component);
-}
-
-renderable.renderScreen = function(screen){
-  renderable.setComponent(screen);
-  renderable.render();
-}
-
-export default renderable;
+export default LixoRenderEngine;

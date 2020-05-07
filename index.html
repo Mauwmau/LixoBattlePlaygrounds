@@ -14,15 +14,15 @@
       import selectionScreen from "./Screens/Selection/selection.js";
       import mapScreen from "./Screens/Map/map.js";
       import battleScreen from "./Screens/Battle/battle.js";
-      import renderable from './Services/render.js';
+      import LREngine from './Services/render.js';
 
       //  Runtime only
 
       const initialScreen = buildInitialScreen(
-        () => {renderable.renderScreen(selectionScreen)}
+        () => {LREngine.renderScreen(selectionScreen)}
       );
 
-      renderable.renderScreen(initialScreen);
+      LREngine.renderScreen(initialScreen);
 
       // let screenArray = [];
       // screenArray.push(initialScreen, selectionScreen, mapScreen, battleScreen);
