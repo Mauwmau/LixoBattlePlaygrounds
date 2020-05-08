@@ -1,6 +1,17 @@
+/* Font import */
+@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600&display=swap');
+
+/* My stylesheets imports */
+@import './Screens/Initial/styles.css';
+
 * {
     margin: 0;
     padding: 0;
     outline: 0;
     box-sizing: border-box;
+    font-family: 'Baloo 2', cursive;
+}
+
+button{
+    cursor: pointer;
 }

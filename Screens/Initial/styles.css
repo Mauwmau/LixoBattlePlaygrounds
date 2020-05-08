@@ -1,0 +1,66 @@
+#initial-screen{
+    height: 100vh;
+    width: 100vw;
+    background-color: royalblue;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.begin-button{
+    position: relative;
+    border: none;
+    width: 150px;
+    height: 75px;
+    font-size: 1.6rem;
+    font-weight: 600;
+    font-family: 'Baloo 2', cursive;
+    color: tomato;
+    background-color: white;
+    box-shadow: tomato 0 0 1px;
+    padding: 15px;
+    transform: translate(-10px, -10px) skew(-15deg);
+    transition: all .15s;
+}
+
+.begin-button:hover{
+    box-shadow: tomato 10px 10px;
+}
+
+.begin-button::before, .begin-button::after{
+    pointer-events: none;
+    position: absolute;
+    content: '';
+    padding: 5px;
+    width: 200%;
+    height: 60%;
+    left: -150vw;
+    transition: all .3s;
+}
+
+.begin-button::before{
+    top: calc(100% + 50px);
+    background-color: white;
+}
+
+.begin-button::after{
+    content: 'Um Lixo de jogo, recomendo';
+    font-size: 1.2rem;
+    color: white;
+    text-align: center;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    top: calc(100% + 60px);
+    background-color: tomato;
+}
+
+.begin-button:hover::before{
+    left: -170px;
+}
+
+.begin-button:hover::after{
+    left: -180px;
+}
