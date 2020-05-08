@@ -1,6 +1,6 @@
 import createObserver from "../../Lib/observer.js";
 
-function buildComponent(executeFlux) {
+function buildComponent() {
 
     //  Screen declaration
     const myScreen = document.createElement('DIV');
@@ -13,7 +13,11 @@ function buildComponent(executeFlux) {
 
     //  Observer fedido
     const beginObserver = createObserver(callToActionButton, 'click');
-    beginObserver.subscribe(executeFlux)
+    beginObserver.subscribe(
+        () => {
+            history.replaceState({component: 'selectionScreen'}, 'selection', '/selection')
+        }
+    )
 
     //  Assemble screen
     myScreen.appendChild(callToActionButton);
