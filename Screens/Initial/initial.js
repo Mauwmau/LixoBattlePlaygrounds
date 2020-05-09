@@ -1,4 +1,5 @@
 import createObserver from "../../Lib/observer.js";
+import createFlowControl from '../../Services/flow.js';
 
 function buildComponent() {
 
@@ -15,7 +16,8 @@ function buildComponent() {
     const beginObserver = createObserver(callToActionButton, 'click');
     beginObserver.subscribe(
         () => {
-            history.replaceState({component: 'selectionScreen'}, 'selection', '/selection')
+            const myFlow = createFlowControl();
+            myFlow.triggerPathChange('/selection');
         }
     )
 

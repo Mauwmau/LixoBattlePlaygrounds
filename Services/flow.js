@@ -1,49 +1,68 @@
-import LREngine from './render.js';
+import LREngine from "./render.js";
 
-import initialScreen from '../Screens/Initial/initial.js';
-import selectionScreen from '../Screens/Selection/selection.js';
-import mapScreen from '../Screens/Map/map.js';
+import initialScreen from "../Screens/Initial/initial.js";
+import selectionScreen from "../Screens/Selection/selection.js";
+import mapScreen from "../Screens/Map/map.js";
+import battleScreen from "../Screens/Battle/battle.js";
 
-//const validPaths = ['/', '/selection', '/map'];
+//  TODO: Decide if using browser paths or not
 
-export default function flow(){
+function createFlowControl() {
 
-    // location.pathname = '/'
+  // - - - Module resources - - -
 
-    const acceptedPaths = {
-        '/'(){
-            const init = initialScreen();
-            LREngine.setComponent(init);
-            LREngine.render();
-        },
+  const init = initialScreen();
 
-        '/selection'(){
-            LREngine.setComponent(selectionScreen);
-            LREngine.render();
-        },
+  const acceptedPaths = {
+    "/"() {
+      LREngine.renderScreen(init);
+    },
 
-        '/map'(){
-            LREngine.setComponent(mapScreen);
-            LREngine.render();
-        }
+    "/selection"() {
+      LREngine.renderScreen(selectionScreen);
+    },
+
+    "/map"() {
+      LREngine.renderScreen(mapScreen);
+    },
+
+    "/battle"(){
+      LREngine.renderScreen(battleScreen);
     }
+  };
 
-    window.addEventListener('popstate', (event) => {
-        if(acceptedPaths[location.pathname]){
-            acceptedPaths[location.pathname]();
-        } else {
-            location.pathname = '/';
-        }
+  const pathChangeEvent = new Event("popstate");
+
+
+  // - - - Module methods - - -
+
+  function startCheckingPath() {
+
+    // Load initial screen
+    window.addEventListener("load", () => {
+      LREngine.renderScreen(init);
+    })
+
+    window.addEventListener("popstate", (event) => {
+      if (acceptedPaths[location.pathname]) {
+        acceptedPaths[location.pathname]();
+      } else {
+        console.log('Unknown path x_x');
+      }
     });
 
-    // history.pushState({}, '', '/');
-    // const popEvent = new Event('popstate');
-    // window.dispatchEvent(popEvent);
+  }
 
-    // history.pushState({}, '', '/selection');
-    // window.dispatchEvent(popEvent);
-    // console.log(location.pathname);
-    //const myFunct = acceptedPaths[location.pathname];
-    //myFunct();
+  function triggerPathChange(path){
+    window.history.pushState({}, '', path);
+    window.dispatchEvent(pathChangeEvent);
+  }
+
+  return {
+    startCheckingPath,
+    triggerPathChange
+  }
 
 }
+
+export default createFlowControl;
