@@ -5,64 +5,77 @@ import selectionScreen from "../Screens/Selection/selection.js";
 import mapScreen from "../Screens/Map/map.js";
 import battleScreen from "../Screens/Battle/battle.js";
 
-//  TODO: Decide if using browser paths or not
+//    - Decided, not going to use paths, usign session storage instead
+//  Let's go to work
 
 function createFlowControl() {
+  // - - - Resources - - -
 
-  // - - - Module resources - - -
+  let currentScreenName = "initial";
+  let currentScreen = initialScreen;
 
-  const init = initialScreen();
+  // const storageEvent = new Event("storage");
 
-  const acceptedPaths = {
-    "/"() {
-      LREngine.renderScreen(init);
+  const allowedScreens = {
+    initial() {
+      currentScreen = initialScreen;
     },
-
-    "/selection"() {
-      LREngine.renderScreen(selectionScreen);
+    selection() {
+      currentScreen = selectionScreen;
     },
-
-    "/map"() {
-      LREngine.renderScreen(mapScreen);
+    map() {
+      currentScreen = mapScreen;
     },
-
-    "/battle"(){
-      LREngine.renderScreen(battleScreen);
-    }
+    battle() {
+      currentScreen = battleScreen;
+    },
   };
 
-  const pathChangeEvent = new Event("popstate");
+  // - - - Methods - - -
 
+  function allowScreenFlux() {
+    LREngine.renderScreen(currentScreen);
 
-  // - - - Module methods - - -
+    window.addEventListener("storage", () => {
+      verifyScreenChange(
+        () => {
+          console.log("Sucesso");
+          switchScreen();
+        }, // Screen is different
 
-  function startCheckingPath() {
-
-    // Load initial screen
-    window.addEventListener("load", () => {
-      LREngine.renderScreen(init);
-    })
-
-    window.addEventListener("popstate", (event) => {
-      if (acceptedPaths[location.pathname]) {
-        acceptedPaths[location.pathname]();
-      } else {
-        console.log('Unknown path x_x');
-      }
+        () => {
+          console.log("Falha");
+        } // Screen is same
+      );
     });
-
   }
 
-  function triggerPathChange(path){
-    window.history.pushState({}, '', path);
-    window.dispatchEvent(pathChangeEvent);
+  function switchScreen() {
+    const wantedScreenName = sessionStorage.getItem("currentScreenName");
+    if (allowedScreens[wantedScreenName]) {
+      allowedScreens[wantedScreenName]();
+      LREngine.renderScreen(currentScreen);
+      currentScreenName = wantedScreenName;
+      // sessionStorage.removeItem('currentScreen');
+    } else {
+      console.log('no screen named ' + wantedScreenName);
+    }
+  }
+
+  function verifyScreenChange(onSucess, onFail) {
+    if (sessionStorage.getItem("currentScreenName")) {
+      return sessionStorage.getItem("currentScreenName") !== currentScreenName
+        ? onSucess() && true
+        : onFail() && false;
+    } else {
+      console.log("There is no screen");
+    }
+    return false;
   }
 
   return {
-    startCheckingPath,
-    triggerPathChange
-  }
-
+    allowScreenFlux,
+  };
 }
 
 export default createFlowControl;

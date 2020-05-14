@@ -16,8 +16,7 @@ function buildComponent() {
     const beginObserver = createObserver(callToActionButton, 'click');
     beginObserver.subscribe(
         () => {
-            const myFlow = createFlowControl();
-            myFlow.triggerPathChange('/selection');
+            sessionStorage.setItem('currentScreen', 'selectionScreen');
         }
     )
 
@@ -28,4 +27,6 @@ function buildComponent() {
 
 }
 
-export default buildComponent;
+const initialScreen = buildComponent()
+
+export default initialScreen;
