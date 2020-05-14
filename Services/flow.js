@@ -40,7 +40,7 @@ function createFlowControl() {
     };
   }
 
-  function linkTo(screenName) {
+  function flowTo(screenName) {
     sessionStorage.setItem("currentScreen", screenName);
     dispatchEvent(storageEvent);
   }
@@ -48,7 +48,7 @@ function createFlowControl() {
   return {
     allowFluxControl,
     pushScreen,
-    linkTo,
+    flowTo,
   };
 }
 

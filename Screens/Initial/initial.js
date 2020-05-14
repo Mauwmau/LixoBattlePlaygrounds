@@ -15,11 +15,11 @@ function buildComponent() {
     //  Flow control
     const myFlow = createFlowControl();
 
-    //  Observer fedido
+    //  Observer
     const beginObserver = createObserver(callToActionButton, 'click');
     beginObserver.subscribe(
         () => {
-            myFlow.linkTo('selection');
+            myFlow.flowTo('selection');
         }
     )
 
