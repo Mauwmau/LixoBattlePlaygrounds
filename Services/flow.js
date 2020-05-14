@@ -1,80 +1,54 @@
 import LREngine from "./render.js";
 
-import initialScreen from "../Screens/Initial/initial.js";
-import selectionScreen from "../Screens/Selection/selection.js";
-import mapScreen from "../Screens/Map/map.js";
-import battleScreen from "../Screens/Battle/battle.js";
-
-//    - Decided, not going to use paths, usign session storage instead
-//  Let's go to work
-
 function createFlowControl() {
-  // - - - Resources - - -
+  const storageEvent = new Event("storage");
+  const getCurrentScreen = () => sessionStorage.getItem("currentScreen");
+  let currentScreen = "";
 
-  let currentScreenName = "initial";
-  let currentScreen = initialScreen;
+  const allowedScreens = {};
 
-  // const storageEvent = new Event("storage");
-
-  const allowedScreens = {
-    initial() {
-      currentScreen = initialScreen;
-    },
-    selection() {
-      currentScreen = selectionScreen;
-    },
-    map() {
-      currentScreen = mapScreen;
-    },
-    battle() {
-      currentScreen = battleScreen;
-    },
-  };
-
-  // - - - Methods - - -
-
-  function allowScreenFlux() {
-    LREngine.renderScreen(currentScreen);
-
+  function allowFluxControl() {
+    sessionStorage.clear();
     window.addEventListener("storage", () => {
-      verifyScreenChange(
-        () => {
-          console.log("Sucesso");
-          switchScreen();
-        }, // Screen is different
-
-        () => {
-          console.log("Falha");
-        } // Screen is same
-      );
+      verifyScreenChange(screenChanged, screenDidntChange);
     });
   }
 
-  function switchScreen() {
-    const wantedScreenName = sessionStorage.getItem("currentScreenName");
-    if (allowedScreens[wantedScreenName]) {
-      allowedScreens[wantedScreenName]();
-      LREngine.renderScreen(currentScreen);
-      currentScreenName = wantedScreenName;
-      // sessionStorage.removeItem('currentScreen');
+  function verifyScreenChange(onSucess, onFail) {
+    return currentScreen !== getCurrentScreen() ? onSucess() : onFail();
+  }
+
+  function screenChanged() {
+    const storedScreen = getCurrentScreen();
+
+    if (allowedScreens[storedScreen]) {
+      allowedScreens[storedScreen]();
+      currentScreen = storedScreen;
+      sessionStorage.removeItem("currentScreen");
     } else {
-      console.log('no screen named ' + wantedScreenName);
+      console.log("ERROR - SCREEN " + storedScreen + " DOESN'T EXIST");
     }
   }
 
-  function verifyScreenChange(onSucess, onFail) {
-    if (sessionStorage.getItem("currentScreenName")) {
-      return sessionStorage.getItem("currentScreenName") !== currentScreenName
-        ? onSucess() && true
-        : onFail() && false;
-    } else {
-      console.log("There is no screen");
-    }
-    return false;
+  function screenDidntChange() {
+    console.log("Made changes in storage but it was not a screen change");
+  }
+
+  function pushScreen(screenName, screen) {
+    allowedScreens[screenName] = () => {
+      LREngine.renderScreen(screen);
+    };
+  }
+
+  function linkTo(screenName) {
+    sessionStorage.setItem("currentScreen", screenName);
+    dispatchEvent(storageEvent);
   }
 
   return {
-    allowScreenFlux,
+    allowFluxControl,
+    pushScreen,
+    linkTo,
   };
 }
 

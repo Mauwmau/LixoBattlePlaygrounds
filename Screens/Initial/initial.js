@@ -12,11 +12,14 @@ function buildComponent() {
     callToActionButton.classList.add('begin-button');
     callToActionButton.innerText = 'Play game';
 
+    //  Flow control
+    const myFlow = createFlowControl();
+
     //  Observer fedido
     const beginObserver = createObserver(callToActionButton, 'click');
     beginObserver.subscribe(
         () => {
-            sessionStorage.setItem('currentScreen', 'selectionScreen');
+            myFlow.linkTo('selection');
         }
     )
 
